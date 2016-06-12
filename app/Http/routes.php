@@ -12,6 +12,7 @@
 */
 
 Route::get('/',['as'=>'home','uses'=>'FrontController@index']);
+Route::get('/home',['as'=>'home','uses'=>'FrontController@index']);
 Route::post('/savefavorite',[
 	'uses' => 'FavoritesController@store',
 	'as' => 'savefavorite',
@@ -20,9 +21,13 @@ Route::get('/savefavorite',[
 	'uses' => 'FavoritesController@store',
 	'as' => 'savefavorite',
 ]);
-Route::get('/savefavorite2',[
-	'uses' => 'FavoritesController@getAllFromUser',
-	'as' => 'savefavorite2',
+Route::get('/post/{id}',[
+	'uses' => 'PostsController@show',
+	'as' => 'post.show',
+]);
+Route::get('/test',[
+	'uses' => 'PostsController@index',
+	'as' => 'test',
 ]);
 
 
@@ -55,6 +60,10 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function(){
 		'as'   => 'admin.posts.destroy',
 	]);
 	Route::resource('favorites','FavoritesController');
+	Route::get('post/{id}',[
+		'uses' => 'PostsController@show',
+		'as'   => 'admin.posts.show',
+	]);
 	Route::get('favorites/{id}/destroy',[
 		'uses' => 'FavoritesController@destroy',
 		'as'   => 'admin.favorites.destroy',
@@ -70,5 +79,3 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function(){
 });
 
 Route::auth();
-
-Route::get('/home', 'HomeController@index');

@@ -14,7 +14,7 @@
 						@foreach($favorites as $favorite)
 							<tr>
 								<td>{{$favorite->id}}</td>
-								<td>{{$favorite->post->title}}</td>
+								<td><a href="{{ url('/post/'.$favorite->post->id.'') }}">{{$favorite->post->title}}</a></td>
 								<td>
 								 <a href="{{route('admin.favorites.destroy',$favorite->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-danger">Delete</a> 
 								</td>

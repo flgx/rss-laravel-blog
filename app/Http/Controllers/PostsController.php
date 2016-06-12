@@ -14,6 +14,7 @@ use App\Image;
 use App\Category;
 use FastFeed\Factory;
 use Auth;
+use Config;
 class PostsController extends Controller
 {
     /**
@@ -24,11 +25,12 @@ class PostsController extends Controller
     public function index(Request $request)
     {
         $fastFeed = Factory::create();
-        $fastFeed->addFeed('default', 'http://www.balls.ie/feed');
+        $fastFeed->addFeed('default', 'http://www.joe.ie/feed');
+        $fastFeed->addfeed('default','http://www.balls.ie/feed');
         $items = $fastFeed->fetch('default');
+           dd(Config::get('mail'));
 
-     
-        $posts = Post::Search($request->title)->orderBy('id','DESC')->paginate(5);
+        $posts = Post::Search($request->title)->orderBy('id','DESC')->paginate(4);
         //Make the relations in 1 array.
         $posts->each(function($posts){
          $posts->category;
@@ -40,15 +42,17 @@ class PostsController extends Controller
             $idid=$item->getId();
             $existPost =Post::where('external_id', '=', $idid)->first();
             $newpost= new Post();
+            $content = strip_tags($item->getContent());
      
-
-            if($item->getContent() != NULL && $existPost == ''){
+            dd($content);
+            if($item->getContent() != NULL && $content != '' && $existPost == ''){
 
             $newpost->title = $item->getName();
             $newpost->content = $item->getContent();
             $newpost->external_id = $item->getId();
             $newpost->user_id = \Auth::user()->id;
             $newpost->category_id = 1;
+            $newpost->created_at = $item->getDate();
             $newpost->save();
            }
         } 
@@ -121,7 +125,9 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::find($id);
+
+        return view('admin.posts.show')->with('post',$post);
     }
 
     /**

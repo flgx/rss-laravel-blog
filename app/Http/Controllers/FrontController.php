@@ -22,10 +22,11 @@ class FrontController extends Controller
         // Search the new posts from ball.ie.
         $fastFeed = Factory::create();
         $fastFeed->addFeed('default', 'http://www.balls.ie/feed');
+        $fastFeed->addFeed('default', 'http://www.joe.ie/feed');
         $items = $fastFeed->fetch('default');
 
      
-        $posts = Post::Search($request->title)->orderBy('id','DESC')->paginate(5);
+        $posts = Post::orderBy('id','DESC')->paginate(4);
         //Make the relations in 1 array.
         $posts->each(function($posts){
          $posts->category;
@@ -41,12 +42,13 @@ class FrontController extends Controller
             
 
 
-                if($item->getContent() != NULL && $existPost == ''){
+                if($item->getContent() != NULL && $item->getContent() != ''  && $existPost == ''){
                     $newpost->title = $item->getName();
                     $newpost->content = $item->getContent();
                     $newpost->external_id = $item->getId();
                     $newpost->user_id = 5;
                     $newpost->category_id = 1;
+                    $newpost->created_at = $item->getDate();
                     $newpost->save();
                }
         } 

@@ -11,6 +11,7 @@ use App\Post;
 use App\Tag;
 use App\Image;
 use App\Category;
+use Auth;
 class ImagesController extends Controller
 {
     /**
@@ -20,12 +21,18 @@ class ImagesController extends Controller
      */
     public function index(Request $request)
     {
-        $images = Image::all();
-        $images->each(function($images){
-            $images->post;
-        });
-        return view('admin.images.index')
-        ->with('images',$images);
+        if(Auth::user()->type == 'admin'){
+            $images = Image::all();
+            $images->each(function($images){
+                $images->post;
+            }); 
+            return view('admin.images.index')
+            ->with('images',$images);                       
+        }else{
+            return redirect()->route('admin.dashboard.index');
+        }
+
+
     }
 
 }
