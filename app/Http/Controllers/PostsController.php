@@ -28,7 +28,7 @@ class PostsController extends Controller
         $fastFeed->addFeed('default', 'http://www.joe.ie/feed');
         $fastFeed->addfeed('default','http://www.balls.ie/feed');
         $items = $fastFeed->fetch('default');
-           dd(Config::get('mail'));
+    
 
         $posts = Post::Search($request->title)->orderBy('id','DESC')->paginate(4);
         //Make the relations in 1 array.
@@ -44,7 +44,6 @@ class PostsController extends Controller
             $newpost= new Post();
             $content = strip_tags($item->getContent());
      
-            dd($content);
             if($item->getContent() != NULL && $content != '' && $existPost == ''){
 
             $newpost->title = $item->getName();
